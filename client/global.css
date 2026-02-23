@@ -1,0 +1,140 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Templar Order Theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    --background: 210 24% 6.5%;
+    --foreground: 0 0% 100%;
+
+    --card: 210 20% 12%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 210 20% 12%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 48 96% 59%;
+    --primary-foreground: 210 24% 6.5%;
+
+    --secondary: 210 20% 20%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 20%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 48 96% 59%;
+    --accent-foreground: 210 24% 6.5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 15%;
+    --input: 210 20% 12%;
+    --ring: 48 96% 59%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 210 24% 6.5%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 48 96% 59%;
+    --sidebar-primary-foreground: 210 24% 6.5%;
+    --sidebar-accent: 48 96% 59%;
+    --sidebar-accent-foreground: 210 24% 6.5%;
+    --sidebar-border: 210 20% 15%;
+    --sidebar-ring: 48 96% 59%;
+  }
+
+  .dark {
+    --background: 210 24% 6.5%;
+    --foreground: 0 0% 100%;
+
+    --card: 210 20% 12%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 210 20% 12%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 48 96% 59%;
+    --primary-foreground: 210 24% 6.5%;
+
+    --secondary: 210 20% 20%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 20%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 48 96% 59%;
+    --accent-foreground: 210 24% 6.5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 15%;
+    --input: 210 20% 12%;
+    --ring: 48 96% 59%;
+
+    --sidebar-background: 210 24% 6.5%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 48 96% 59%;
+    --sidebar-primary-foreground: 210 24% 6.5%;
+    --sidebar-accent: 48 96% 59%;
+    --sidebar-accent-foreground: 210 24% 6.5%;
+    --sidebar-border: 210 20% 15%;
+    --sidebar-ring: 48 96% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-stone text-white font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-lg;
+  }
+
+  .button-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-gold/50;
+  }
+
+  .card-hover {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  .section-fade {
+    @apply animate-fade-up;
+  }
+}
