@@ -36,6 +36,32 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-stone pt-16">
+      {/* 🔥 FULL WIDTH VIDEO HERO */}
+<section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+  {/* VIDEO */}
+  <video
+    src="/about-templar.mp4"   // Put file inside public/
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+
+  {/* DARK OVERLAY */}
+  <div className="absolute inset-0 bg-black/60" />
+
+  {/* CONTENT */}
+  <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+    <h1 className="text-4xl md:text-6xl font-serif font-bold text-red-800 mb-6">
+      The Legacy of the Templar Order
+    </h1>
+
+    <p className="text-white/80 max-w-3xl text-lg md:text-xl">
+      Forged in faith. Tempered in battle. Remembered through centuries.
+    </p>
+  </div>
+</section>
       {/* Mission Section */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">

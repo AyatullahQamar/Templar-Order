@@ -63,7 +63,30 @@ const Index = () => {
       description:
         "Defenders of the realm, upholding justice, chivalry, and the protection of the innocent.",
     },
+    
   ];
+  const members = [
+  {
+    name: "Sir Alaric De Vaux",
+    title: "Grand Master",
+    image: "/members/member1.jpg",
+  },
+  {
+    name: "Sir Cedric Thornfield",
+    title: "Commander of the North",
+    image: "/members/member2.jpg",
+  },
+  {
+    name: "Sir Lucian Blackmoor",
+    title: "Keeper of Relics",
+    image: "/members/member3.jpg",
+  },
+  {
+    name: "Sir Roland Evercrest",
+    title: "Master of Discipline",
+    image: "/members/member4.jpg",
+  },
+];
 
   // ✅ slider autoplay
   useEffect(() => {
@@ -439,6 +462,44 @@ const Index = () => {
           </button>
         </div>
       </section>
+      {/* ✅ TEMPLAR MEMBERS SECTION */}
+<section className="py-24 bg-stone/40">
+  <div className="max-w-7xl mx-auto px-4">
+    <h2 className="text-5xl font-serif font-bold text-center text-red-800 mb-16">
+      Members of the Order
+    </h2>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      {members.map((member, index) => (
+        <div
+          key={index}
+          className="group relative glass-effect rounded-2xl overflow-hidden text-center transition hover:scale-105 duration-500"
+        >
+          {/* IMAGE */}
+          <div className="relative h-80 overflow-hidden">
+            <img
+              src={member.image}
+              alt={member.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent opacity-80" />
+          </div>
+
+          {/* CONTENT */}
+          <div className="p-6">
+            <h3 className="text-xl font-serif font-bold text-red-800 mb-2">
+              {member.name}
+            </h3>
+            <p className="text-white/70">{member.title}</p>
+          </div>
+
+          {/* HOVER GLOW */}
+          <div className="absolute inset-0 border border-red-800/30 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500" />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
     </div>
   );
 };
