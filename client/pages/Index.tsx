@@ -1,9 +1,25 @@
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Sword, Shield, Crown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Sword,
+  Shield,
+  Crown,
+  Volume2,
+  VolumeX,
+  Play,
+} from "lucide-react";
 
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+
+  const location = useLocation();
+
+  // ✅ MUSIC
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [musicOn, setMusicOn] = useState(false);
 
   const slides = [
     {
@@ -49,6 +65,7 @@ const Index = () => {
     },
   ];
 
+  // ✅ slider autoplay
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -60,16 +77,116 @@ const Index = () => {
     setIsVisible(true);
   }, []);
 
+  // ✅ MUSIC: try to start, but browsers may block until user interacts.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const start = async () => {
+      try {
+        audio.volume = 0.25; // light music
+        await audio.play();
+        setMusicOn(true);
+      } catch {
+        // autoplay blocked - will start after first click/tap/keypress
+      }
+    };
+
+    const handleFirstInteraction = () => {
+      start();
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+    };
+
+    start();
+    window.addEventListener("click", handleFirstInteraction);
+    window.addEventListener("touchstart", handleFirstInteraction);
+    window.addEventListener("keydown", handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+    };
+  }, []);
+
+  // ✅ STOP MUSIC WHEN ROUTE CHANGES (Home -> About -> Contact etc.)
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.pause();
+    audio.currentTime = 0;
+    setMusicOn(false);
+  }, [location.pathname]);
+
+  // ✅ STOP MUSIC WHEN TAB IS CLOSED / BACK / HIDDEN
+  useEffect(() => {
+    const stop = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      audio.pause();
+      audio.currentTime = 0;
+      setMusicOn(false);
+    };
+
+    window.addEventListener("pagehide", stop);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+    });
+
+    return () => {
+      window.removeEventListener("pagehide", stop);
+    };
+  }, []);
+
+  const toggleMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (musicOn) {
+      audio.pause();
+      setMusicOn(false);
+    } else {
+      try {
+        audio.volume = 0.25;
+        await audio.play();
+        setMusicOn(true);
+      } catch {
+        // blocked until user interacts
+      }
+    }
+  };
+
   const nextSlide = () => setCurrentSlide((p) => (p + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((p) => (p - 1 + slides.length) % slides.length);
+  const prevSlide = () =>
+    setCurrentSlide((p) => (p - 1 + slides.length) % slides.length);
 
   return (
     <div className="min-h-screen bg-stone pt-16">
+      {/* ✅ Put your file in: public/templar-theme.mp3 */}
+      <audio ref={audioRef} src="/templar-theme.mp3" loop preload="auto" />
+
       {/* HERO */}
       <section
         id="home"
         className="relative min-h-screen flex items-center justify-center overflow-hidden py-20"
       >
+        {/* ✅ MUSIC BUTTON */}
+        <button
+          onClick={toggleMusic}
+          className="absolute top-6 right-6 z-20 bg-red-800/20 hover:bg-red-800/40 text-red-800 px-4 py-2 rounded-lg transition flex items-center gap-2 border border-red-800/30"
+          aria-label="Toggle music"
+          title={musicOn ? "Mute music" : "Play music"}
+        >
+          {musicOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          <span className="text-sm font-serif font-bold">
+            {musicOn ? "Music On" : "Music Off"}
+          </span>
+        </button>
+
         <div className="absolute inset-0">
           {slides.map((slide, index) => (
             <div
@@ -118,6 +235,15 @@ const Index = () => {
             Templar Order
           </h1>
 
+          {/* LOGO BELOW HEADING */}
+          <div className="flex justify-center mb-6">
+            <img
+              src="/logo.png"
+              alt="Templar Order Logo"
+              className="w-24 md:w-32 h-auto object-contain drop-shadow-lg animate-fade-in"
+            />
+          </div>
+
           <p className="text-xl md:text-2xl text-white/90 mb-8">
             Keepers of Ancient Secrets, Guardians of Sacred Truth
           </p>
@@ -134,6 +260,70 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ✅ VIDEO + CONTENT SECTION */}
+      <section className="py-24">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          {/* VIDEO CARD */}
+          <div className="relative rounded-2xl overflow-hidden glass-effect lg:sticky lg:top-24">
+            <div className="relative w-full h-[500px] md:h-[600px] lg:h-[650px]">
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/templar.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent opacity-70" />
+              <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-red-800/20 border border-red-800/30 text-red-800 px-3 py-2 rounded-lg">
+                <Play size={16} />
+                <span className="text-sm font-serif font-bold">Watch the Oath</span>
+              </div>
+            </div>
+          </div>
+
+          {/* CONTENT */}
+          <div className="lg:pt-2">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-red-800 mb-6 leading-tight">
+              The Oath of the <br className="hidden md:block" />
+              Order
+            </h2>
+
+            <p className="text-white/80 leading-relaxed mb-6">
+              Beyond the armor and the banners lies a vow — a discipline of mind,
+              body, and spirit. The Templar Order represents commitment to purpose,
+              courage under pressure, and loyalty that never fades.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              {[
+                { title: "Sacred Duty", text: "Stand for truth, even in shadow." },
+                { title: "Quiet Strength", text: "Endure storms with resolve." },
+                { title: "Brotherhood", text: "Protect those who stand with you." },
+                { title: "Legacy", text: "Leave a mark that survives time." },
+              ].map((b, i) => (
+                <div key={i} className="glass-effect rounded-xl p-5">
+                  <h3 className="text-lg font-serif font-bold text-red-800 mb-2">
+                    {b.title}
+                  </h3>
+                  <p className="text-white/70">{b.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button className="px-8 py-3 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition">
+                Read the Chronicle
+              </button>
+              <button className="px-8 py-3 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition">
+                View Artifacts
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* VALUES */}
       <section className="py-24">
         <h2 className="text-5xl font-serif font-bold text-center text-red-800 mb-16">
@@ -144,7 +334,10 @@ const Index = () => {
           {highlights.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div key={index} className="glass-effect p-8 rounded-lg card-hover">
+              <div
+                key={index}
+                className="glass-effect p-8 rounded-lg card-hover"
+              >
                 <div className="flex justify-center mb-6">
                   <div className="w-16 h-16 bg-red-800/20 rounded-lg flex items-center justify-center">
                     <Icon className="w-8 h-8 text-red-800" />
@@ -162,7 +355,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ✅ NEW SLIDER SECTION BELOW CORE VALUES */}
+      {/* SLIDER SECTION */}
       <section className="py-20 bg-stone/50">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-center text-red-800 mb-12">
@@ -170,7 +363,6 @@ const Index = () => {
           </h2>
 
           <div className="relative h-[420px] md:h-[480px] rounded-xl overflow-hidden group glass-effect">
-            {/* Slide */}
             {slides.map((slide, index) => (
               <div
                 key={index}
@@ -194,7 +386,6 @@ const Index = () => {
               </div>
             ))}
 
-            {/* Arrows */}
             <button
               onClick={prevSlide}
               className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-red-800/20 hover:bg-red-800/40 text-red-800 p-3 rounded-lg transition opacity-0 group-hover:opacity-100"
@@ -211,7 +402,6 @@ const Index = () => {
               <ChevronRight size={24} />
             </button>
 
-            {/* Dots */}
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
               {slides.map((_, index) => (
                 <button
@@ -235,7 +425,8 @@ const Index = () => {
         </h2>
 
         <p className="text-white/80 mb-10 max-w-3xl mx-auto">
-          Step forward and discover what it means to be part of a legacy that spans centuries.
+          Step forward and discover what it means to be part of a legacy that
+          spans centuries.
         </p>
 
         <div className="flex justify-center gap-4">

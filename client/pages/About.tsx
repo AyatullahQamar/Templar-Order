@@ -36,27 +36,26 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-stone pt-16">
-
       {/* Mission Section */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+          <div className="relative h-98 rounded-lg overflow-hidden">
+            <img
+              src="/templarr.jpg"
+              alt="Templar Knight"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent opacity-60" />
+          </div>
 
-       <div className="relative h-98 rounded-lg overflow-hidden">
-  <img
-    src="/templarr.jpg"
-    alt="Templar Knight"
-    className="w-full h-full object-cover"
-  />
-
-  <div className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent opacity-60" />
-</div>
           <div>
             <h2 className="text-5xl font-serif font-bold text-red-800 mb-6">
               Our Mission & Heritage
             </h2>
 
             <p className="text-white/80 mb-6">
-              The Templar Order stands as a beacon of virtue and unwavering purpose.
+              The Templar Order stands as a beacon of virtue and unwavering
+              purpose.
             </p>
 
             <h3 className="text-2xl font-serif font-bold text-red-800 mb-4">
@@ -81,74 +80,91 @@ const About = () => {
         </div>
       </section>
 
-{/* Timeline Section */}
-<section id="about" className="py-16 md:py-24 bg-stone/50">
-  <div className="max-w-5xl mx-auto px-4">
-    <h2 className="text-4xl md:text-5xl font-serif font-bold text-center text-red-800 mb-16">
-      Our Timeline
-    </h2>
+      {/* Timeline Section */}
+      <section id="about" className="py-16 md:py-24 bg-stone/50">
+        <div className="max-w-5xl mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-center text-red-800 mb-16">
+            Our Timeline
+          </h2>
 
-    <div className="relative">
-      {/* Center Line */}
-      <div className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-[2px] bg-gradient-to-b from-red-800 via-red-800/50 to-red-800/20" />
+          <div className="relative">
+            {/* Center Line */}
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-[2px] bg-gradient-to-b from-red-800 via-red-800/50 to-red-800/20" />
 
-      <div className="space-y-12">
-        {timelineEvents.map((event, index) => {
-          const isLeft = index % 2 === 0;
+            <div className="space-y-12">
+              {timelineEvents.map((event, index) => {
+                const isLeft = index % 2 === 0;
 
-          return (
-            <div key={index} className="relative">
-              {/* Dot */}
-              <div className="absolute left-1/2 top-8 -translate-x-1/2 w-5 h-5 bg-red-800 rounded-full border-4 border-stone shadow-lg shadow-red-800/50 z-20" />
+                return (
+                  <div key={index} className="relative">
+                    {/* Dot */}
+                    <div className="absolute left-1/2 top-8 -translate-x-1/2 w-5 h-5 bg-red-800 rounded-full border-4 border-stone shadow-lg shadow-red-800/50 z-20" />
 
-              {/* Desktop ZigZag Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 items-start">
-                {/* LEFT SIDE */}
-                <div className={`${isLeft ? "md:justify-self-end" : "md:opacity-0 md:pointer-events-none"}`}>
-                  <div className={`glass-effect p-6 rounded-lg w-full md:max-w-md ${isLeft ? "" : ""}`}>
-                    <div className="text-2xl font-serif font-bold text-red-800 mb-2">
-                      {event.year}
+                    {/* ✅ MOBILE: single card only (no duplicates) */}
+                    <div className="md:hidden pt-16">
+                      <div className="glass-effect p-6 rounded-lg w-full">
+                        <div className="text-2xl font-serif font-bold text-red-800 mb-2">
+                          {event.year}
+                        </div>
+                        <h3 className="text-xl font-serif font-bold text-white mb-3">
+                          {event.title}
+                        </h3>
+                        <p className="text-white/70 font-light leading-relaxed">
+                          {event.description}
+                        </p>
+                      </div>
                     </div>
-                    <h3 className="text-xl font-serif font-bold text-white mb-3">
-                      {event.title}
-                    </h3>
-                    <p className="text-white/70 font-light leading-relaxed">
-                      {event.description}
-                    </p>
-                  </div>
-                </div>
 
-                {/* RIGHT SIDE */}
-                <div className={`${!isLeft ? "md:justify-self-start" : "md:opacity-0 md:pointer-events-none"}`}>
-                  <div className={`glass-effect p-6 rounded-lg w-full md:max-w-md ${!isLeft ? "" : ""}`}>
-                    <div className="text-2xl font-serif font-bold text-red-800 mb-2">
-                      {event.year}
+                    {/* ✅ DESKTOP: zig-zag layout */}
+                    <div className="hidden md:grid grid-cols-2 gap-x-16 items-start">
+                      {/* LEFT SIDE */}
+                      <div className={isLeft ? "justify-self-end" : ""}>
+                        {isLeft && (
+                          <div className="glass-effect p-6 rounded-lg w-full max-w-md">
+                            <div className="text-2xl font-serif font-bold text-red-800 mb-2">
+                              {event.year}
+                            </div>
+                            <h3 className="text-xl font-serif font-bold text-white mb-3">
+                              {event.title}
+                            </h3>
+                            <p className="text-white/70 font-light leading-relaxed">
+                              {event.description}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* RIGHT SIDE */}
+                      <div className={!isLeft ? "justify-self-start" : ""}>
+                        {!isLeft && (
+                          <div className="glass-effect p-6 rounded-lg w-full max-w-md">
+                            <div className="text-2xl font-serif font-bold text-red-800 mb-2">
+                              {event.year}
+                            </div>
+                            <h3 className="text-xl font-serif font-bold text-white mb-3">
+                              {event.title}
+                            </h3>
+                            <p className="text-white/70 font-light leading-relaxed">
+                              {event.description}
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <h3 className="text-xl font-serif font-bold text-white mb-3">
-                      {event.title}
-                    </h3>
-                    <p className="text-white/70 font-light leading-relaxed">
-                      {event.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
 
-              {/* Connector line (desktop only) */}
-              <div
-                className={`hidden md:block absolute top-[38px] h-[2px] bg-red-800/40 ${
-                  isLeft
-                    ? "right-1/2 w-16" // line to left card
-                    : "left-1/2 w-16"  // line to right card
-                }`}
-              />
+                    {/* Connector line (desktop only) */}
+                    <div
+                      className={`hidden md:block absolute top-[38px] h-[2px] bg-red-800/40 ${
+                        isLeft ? "right-1/2 w-16" : "left-1/2 w-16"
+                      }`}
+                    />
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
-    </div>
-  </div>
-</section>
+          </div>
+        </div>
+      </section>
 
       {/* Values */}
       <section className="py-24">
@@ -173,7 +189,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };
