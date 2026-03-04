@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,77 +16,91 @@ const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ declare once
 
   // ✅ MUSIC
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [musicOn, setMusicOn] = useState(false);
 
-  const slides = [
-    {
-      title: "Knights of the Crusade",
-      image:
-        "https://images.unsplash.com/photo-1564577236127-6b6b42ad4f0a?w=1200&h=600&fit=crop",
-    },
-    {
-      title: "Ancient Fortresses",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop",
-    },
-    {
-      title: "Holy Relics and Treasures",
-      image:
-        "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=1200&h=600&fit=crop",
-    },
-    {
-      title: "Medieval Armor Legacy",
-      image:
-        "https://images.unsplash.com/photo-1521747116042-f23626516ea3?w=1200&h=600&fit=crop",
-    },
-  ];
+  const goToContact = () => {
+    navigate("/contact");
+  }; // ✅ IMPORTANT: close function here
 
-  const highlights = [
-    {
-      icon: Shield,
-      title: "Brotherhood",
-      description:
-        "United in faith and purpose, bound by sacred oaths of loyalty and mutual protection.",
-    },
-    {
-      icon: Sword,
-      title: "Discipline",
-      description:
-        "Rigorous training and martial excellence, perfecting the art of combat and virtue.",
-    },
-    {
-      icon: Crown,
-      title: "Honor",
-      description:
-        "Defenders of the realm, upholding justice, chivalry, and the protection of the innocent.",
-    },
-    
-  ];
-  const members = [
-  {
-    name: "Sir Alaric De Vaux",
-    title: "Grand Master",
-    image: "/members/member1.jpg",
-  },
-  {
-    name: "Sir Cedric Thornfield",
-    title: "Commander of the North",
-    image: "/members/member2.jpg",
-  },
-  {
-    name: "Sir Lucian Blackmoor",
-    title: "Keeper of Relics",
-    image: "/members/member3.jpg",
-  },
-  {
-    name: "Sir Roland Evercrest",
-    title: "Master of Discipline",
-    image: "/members/member4.jpg",
-  },
-];
+  const slides = useMemo(
+    () => [
+      {
+        title: "Knights of the Crusade",
+        image:
+          "https://images.unsplash.com/photo-1564577236127-6b6b42ad4f0a?w=1200&h=600&fit=crop",
+      },
+      {
+        title: "Ancient Fortresses",
+        image:
+          "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop",
+      },
+      {
+        title: "Holy Relics and Treasures",
+        image:
+          "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=1200&h=600&fit=crop",
+      },
+      {
+        title: "Medieval Armor Legacy",
+        image:
+          "https://images.unsplash.com/photo-1521747116042-f23626516ea3?w=1200&h=600&fit=crop",
+      },
+    ],
+    []
+  );
+
+  const highlights = useMemo(
+    () => [
+      {
+        icon: Shield,
+        title: "Brotherhood",
+        description:
+          "United in faith and purpose, bound by sacred oaths of loyalty and mutual protection.",
+      },
+      {
+        icon: Sword,
+        title: "Discipline",
+        description:
+          "Rigorous training and martial excellence, perfecting the art of combat and virtue.",
+      },
+      {
+        icon: Crown,
+        title: "Honor",
+        description:
+          "Defenders of the realm, upholding justice, chivalry, and the protection of the innocent.",
+      },
+    ],
+    []
+  );
+
+  const members = useMemo(
+    () => [
+      {
+        name: "Sir Alaric De Vaux",
+        title: "Grand Master",
+        image: "/members/member1.jpg",
+      },
+      {
+        name: "Sir Cedric Thornfield",
+        title: "Commander of the North",
+        image: "/members/member2.jpg",
+      },
+      {
+        name: "Sir Lucian Blackmoor",
+        title: "Keeper of Relics",
+        image: "/members/member3.jpg",
+      },
+      {
+        name: "Sir Roland Evercrest",
+        title: "Master of Discipline",
+        image: "/members/member4.jpg",
+      },
+    ],
+    []
+  );
 
   // ✅ slider autoplay
   useEffect(() => {
@@ -107,11 +121,11 @@ const Index = () => {
 
     const start = async () => {
       try {
-        audio.volume = 0.25; // light music
+        audio.volume = 0.25;
         await audio.play();
         setMusicOn(true);
       } catch {
-        // autoplay blocked - will start after first click/tap/keypress
+        // autoplay blocked
       }
     };
 
@@ -134,7 +148,7 @@ const Index = () => {
     };
   }, []);
 
-  // ✅ STOP MUSIC WHEN ROUTE CHANGES (Home -> About -> Contact etc.)
+  // ✅ STOP MUSIC WHEN ROUTE CHANGES
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -144,7 +158,7 @@ const Index = () => {
     setMusicOn(false);
   }, [location.pathname]);
 
-  // ✅ STOP MUSIC WHEN TAB IS CLOSED / BACK / HIDDEN
+  // ✅ STOP MUSIC WHEN TAB IS CLOSED / HIDDEN
   useEffect(() => {
     const stop = () => {
       const audio = audioRef.current;
@@ -156,12 +170,15 @@ const Index = () => {
     };
 
     window.addEventListener("pagehide", stop);
-    document.addEventListener("visibilitychange", () => {
+
+    const onVis = () => {
       if (document.hidden) stop();
-    });
+    };
+    document.addEventListener("visibilitychange", onVis);
 
     return () => {
       window.removeEventListener("pagehide", stop);
+      document.removeEventListener("visibilitychange", onVis);
     };
   }, []);
 
@@ -203,6 +220,7 @@ const Index = () => {
           className="absolute top-6 right-6 z-20 bg-red-800/20 hover:bg-red-800/40 text-red-800 px-4 py-2 rounded-lg transition flex items-center gap-2 border border-red-800/30"
           aria-label="Toggle music"
           title={musicOn ? "Mute music" : "Play music"}
+          type="button"
         >
           {musicOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
           <span className="text-sm font-serif font-bold">
@@ -258,7 +276,6 @@ const Index = () => {
             Templar Order
           </h1>
 
-          {/* LOGO BELOW HEADING */}
           <div className="flex justify-center mb-6">
             <img
               src="/logo.png"
@@ -272,11 +289,19 @@ const Index = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-3 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition">
+            <button
+              type="button"
+              onClick={goToContact}
+              className="px-8 py-3 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition"
+            >
               Join the Order
             </button>
 
-            <button className="px-8 py-3 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition">
+            <button
+              type="button"
+               onClick={() => navigate("/explore-history")}
+              className="px-8 py-3 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition"
+            >
               Explore History
             </button>
           </div>
@@ -286,7 +311,6 @@ const Index = () => {
       {/* ✅ VIDEO + CONTENT SECTION */}
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* VIDEO CARD */}
           <div className="relative rounded-2xl overflow-hidden glass-effect lg:sticky lg:top-24">
             <div className="relative w-full h-[500px] md:h-[600px] lg:h-[650px]">
               <video
@@ -306,7 +330,6 @@ const Index = () => {
             </div>
           </div>
 
-          {/* CONTENT */}
           <div className="lg:pt-2">
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-red-800 mb-6 leading-tight">
               The Oath of the <br className="hidden md:block" />
@@ -336,10 +359,16 @@ const Index = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-8 py-3 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition">
+              <button
+                type="button"
+                className="px-8 py-3 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition"
+              >
                 Read the Chronicle
               </button>
-              <button className="px-8 py-3 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition">
+              <button
+                type="button"
+                className="px-8 py-3 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition"
+              >
                 View Artifacts
               </button>
             </div>
@@ -357,10 +386,7 @@ const Index = () => {
           {highlights.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div
-                key={index}
-                className="glass-effect p-8 rounded-lg card-hover"
-              >
+              <div key={index} className="glass-effect p-8 rounded-lg card-hover">
                 <div className="flex justify-center mb-6">
                   <div className="w-16 h-16 bg-red-800/20 rounded-lg flex items-center justify-center">
                     <Icon className="w-8 h-8 text-red-800" />
@@ -411,6 +437,7 @@ const Index = () => {
 
             <button
               onClick={prevSlide}
+              type="button"
               className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-red-800/20 hover:bg-red-800/40 text-red-800 p-3 rounded-lg transition opacity-0 group-hover:opacity-100"
               aria-label="Previous slide"
             >
@@ -419,6 +446,7 @@ const Index = () => {
 
             <button
               onClick={nextSlide}
+              type="button"
               className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-red-800/20 hover:bg-red-800/40 text-red-800 p-3 rounded-lg transition opacity-0 group-hover:opacity-100"
               aria-label="Next slide"
             >
@@ -429,6 +457,7 @@ const Index = () => {
               {slides.map((_, index) => (
                 <button
                   key={index}
+                  type="button"
                   onClick={() => setCurrentSlide(index)}
                   aria-label={`Go to slide ${index + 1}`}
                   className={`h-2 rounded-full transition-all duration-300 ${
@@ -453,53 +482,58 @@ const Index = () => {
         </p>
 
         <div className="flex justify-center gap-4">
-          <button className="px-10 py-4 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition">
+          <button
+            type="button"
+            onClick={goToContact}
+            className="px-10 py-4 bg-red-800 text-white font-serif font-bold rounded hover:shadow-lg hover:shadow-red-800/50 transition"
+          >
             Join the Order
           </button>
 
-          <button className="px-10 py-4 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition">
+          <button
+            type="button"
+            className="px-10 py-4 border-2 border-red-800 text-red-800 font-serif font-bold rounded hover:bg-red-800/10 transition"
+          >
             Learn More
           </button>
         </div>
       </section>
-      {/* ✅ TEMPLAR MEMBERS SECTION */}
-<section className="py-24 bg-stone/40">
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-5xl font-serif font-bold text-center text-red-800 mb-16">
-      Members of the Order
-    </h2>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-      {members.map((member, index) => (
-        <div
-          key={index}
-          className="group relative glass-effect rounded-2xl overflow-hidden text-center transition hover:scale-105 duration-500"
-        >
-          {/* IMAGE */}
-          <div className="relative h-80 overflow-hidden">
-            <img
-              src={member.image}
-              alt={member.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent opacity-80" />
+      {/* ✅ MEMBERS */}
+      <section className="py-24 bg-stone/40">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-5xl font-serif font-bold text-center text-red-800 mb-16">
+            Members of the Order
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            {members.map((member, index) => (
+              <div
+                key={index}
+                className="group relative glass-effect rounded-2xl overflow-hidden text-center transition hover:scale-105 duration-500"
+              >
+                <div className="relative h-80 overflow-hidden">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent opacity-80" />
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-serif font-bold text-red-800 mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-white/70">{member.title}</p>
+                </div>
+
+                <div className="absolute inset-0 border border-red-800/30 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500" />
+              </div>
+            ))}
           </div>
-
-          {/* CONTENT */}
-          <div className="p-6">
-            <h3 className="text-xl font-serif font-bold text-red-800 mb-2">
-              {member.name}
-            </h3>
-            <p className="text-white/70">{member.title}</p>
-          </div>
-
-          {/* HOVER GLOW */}
-          <div className="absolute inset-0 border border-red-800/30 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500" />
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
     </div>
   );
 };
