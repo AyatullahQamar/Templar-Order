@@ -13,6 +13,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ExploreHistory from "@/pages/ExploreHistory";
 import NotFound from "./pages/NotFound";
+import MusicPlayer from "./components/MusicPlayer";
 
 const queryClient = new QueryClient();
 
@@ -22,14 +23,13 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <MusicPlayer />
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/explore-history" element={<ExploreHistory />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
@@ -39,3 +39,5 @@ const App = () => (
 );
 
 createRoot(document.getElementById("root")!).render(<App />);
+
+export default App;

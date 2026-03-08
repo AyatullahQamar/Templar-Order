@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
+import MusicPlayer from "../components/MusicPlayer";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,17 +19,33 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: "", email: "", message: "" });
-      setSubmitted(false);
-    }, 3000);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setFormData({ name: "", email: "", message: "" });
+          setSubmitted(false);
+        }, 3000);
+      } else {
+        alert("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-stone pt-16">
+    <div className="min-h-screen bg-stone pt-16 relative">
+    
+
       {/* Introduction Section */}
       <section className="py-16 md:py-24 bg-stone/50">
         <div className="max-w-3xl mx-auto px-4 text-center section-fade">
@@ -53,10 +70,10 @@ const Contact = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {/* Contact Info Cards */}
-            {[
+            { [
               { icon: Mail, label: "Email", value: "contact@templarorder.com" },
-              { icon: Phone, label: "Phone", value: "+1 (555) 123-4567" },
-              { icon: MapPin, label: "Location", value: "Holy Land, Jerusalem" },
+              { icon: Phone, label: "Phone", value: "8952811944" },
+              { icon: MapPin, label: "Location", value: "Jaipur, Rajasthan" },
             ].map((item, index) => {
               const IconComponent = item.icon;
               return (
@@ -154,7 +171,7 @@ const Contact = () => {
           </h2>
 
           <div className="space-y-8">
-            {[
+            { [
               {
                 step: "01",
                 title: "Initial Contact",
@@ -212,9 +229,6 @@ const Contact = () => {
           <p className="text-xl text-white/80 mb-8 leading-relaxed font-light">
             Throughout history, individuals of strength and character have answered the call to serve something greater than themselves. The legacy continues. The question is not whether the Order needs you—it is whether you are ready to answer.
           </p>
-          <button className="px-10 py-4 bg-red-800 text-white font-serif font-bold text-lg rounded hover:shadow-lg hover:shadow-red-800/50 transition-all duration-300">
-            Begin Your Journey
-          </button>
         </div>
       </section>
     </div>

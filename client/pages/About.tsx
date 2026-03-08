@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import MusicPlayer from "../components/MusicPlayer";
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -35,7 +36,9 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-stone pt-16">
+    <div className="min-h-screen bg-stone pt-16 relative">
+      
+
       {/* 🔥 FULL WIDTH VIDEO HERO */}
 <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
   {/* VIDEO */}
@@ -89,13 +92,7 @@ const About = () => {
             </h3>
 
             <ul className="space-y-3">
-              {[
-                "Unwavering Courage",
-                "Pursuit of Justice",
-                "Sacred Brotherhood",
-                "Excellence in Endeavors",
-                "Growth Through Virtue",
-              ].map((item, index) => (
+              {["Unwavering Courage", "Pursuit of Justice", "Sacred Brotherhood", "Excellence in Endeavors", "Growth Through Virtue"].map((item, index) => (
                 <li key={index} className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-red-800 rounded-full mt-2" />
                   <span className="text-white/80">{item}</span>
