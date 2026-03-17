@@ -31,19 +31,19 @@ const Index = () => {
   const slides = useMemo(
     () => [
       {
-        title: "Knights of the Crusade",
+        title: "Smart Money Movements",
        image: "/hero/hero1.jpg",
       },
       {
-        title: "Ancient Fortresses",
+        title: "Wealth Accumulation Stratagies",
        image: "/hero/hero2.jpg",
       },
       {
-        title: "Holy Relics and Treasures",
+        title: "Banking & Liquidity Flows",
     image: "/hero/hero3.jpg",
       },
       {
-        title: "Medieval Armor Legacy",
+        title: "Emerging Investment Frontiers",
       image: "/hero/hero4.jpg",
       },
     ],
@@ -56,19 +56,19 @@ const Index = () => {
         icon: Shield,
         title: "Brotherhood",
         description:
-          "United in faith and purpose, bound by sacred oaths of loyalty and mutual protection.",
+          "A trusted network built on credibility, collaboration, and strategic alliances.We operate through strong relationships, high-value connections, and mutual growth in finance, business, and influence"
       },
       {
         icon: Sword,
         title: "Discipline",
         description:
-          "Rigorous training and martial excellence, perfecting the art of combat and virtue.",
+          "Precision in financial decisions, consistency in execution.We master capital allocation, risk management, and long-term wealth building through focused strategy and continuous learning."
       },
       {
         icon: Crown,
         title: "Honor",
         description:
-          "Defenders of the realm, upholding justice, chivalry, and the protection of the innocent.",
+          "Integrity in every transaction, transparency in every deal.We uphold ethical finance, responsible investing, and protect the trust placed in us—because reputation is the ultimate currency.",
       },
     ],
     []
@@ -268,7 +268,7 @@ const Index = () => {
           </div>
 
           <p className="text-xl md:text-2xl text-white/90 mb-8">
-            Keepers of Ancient Secrets, Guardians of Sacred Truth
+           Forging an Inner Circle of Power, Capital, and Influence.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

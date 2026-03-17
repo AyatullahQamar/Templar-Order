@@ -93,10 +93,7 @@ const Footer = () => {
                 <span>+91 8952811944</span>
               </div>
 
-              <div className="flex items-start gap-3 text-white/60 hover:text-red-800 transition text-sm cursor-pointer">
-                <MapPin size={16} className="text-red-800 mt-0.5" />
-                <span>Holy Land : Jaipur, Rajasthan</span>
-              </div>
+             
             </div>
           </div>
 
